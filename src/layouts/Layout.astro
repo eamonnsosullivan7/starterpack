@@ -1,0 +1,71 @@
+---
+import { getSiteSettings } from '../lib/sanity';
+
+interface Props {
+  title: string;
+  description?: string;
+  children?: any;
+}
+
+const { title, description } = Astro.props;
+const settings = await getSiteSettings();
+const siteTitle = settings?.title ?? 'Site';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} · {siteTitle}</title>
+    <meta name="description" content={description ?? settings?.description ?? ''} />
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/">{siteTitle}</a>
+      <nav>
+        {settings?.navItems?.map((item: any) => (
+          <a href={item.path}>{item.label}</a>
+        ))}
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; {new Date().getFullYear()} {siteTitle}</p>
+    </footer>
+
+    <style>
+      :root {
+        --max-width: 72rem;
+        --space-md: 1.5rem;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+      }
+      .site-header,
+      .site-footer {
+        max-width: var(--max-width);
+        margin-inline: auto;
+        padding: var(--space-md);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      main {
+        max-width: var(--max-width);
+        margin-inline: auto;
+        padding: var(--space-md);
+      }
+      nav a {
+        margin-left: 1rem;
+      }
+    </style>
+  </body>
+</html>

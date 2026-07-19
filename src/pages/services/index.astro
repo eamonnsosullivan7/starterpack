@@ -1,0 +1,25 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import { getAllServices } from '../../lib/sanity';
+
+const services = await getAllServices();
+---
+
+<Layout title="Services">
+  <h1>Services</h1>
+  <div class="grid">
+    {services.map((service: any) => (
+      <ServiceCard {...service} />
+    ))}
+  </div>
+</Layout>
+
+<style>
+  .grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    margin-top: 2rem;
+  }
+</style>

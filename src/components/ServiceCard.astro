@@ -1,0 +1,32 @@
+---
+interface Props {
+  title: string;
+  summary?: string;
+  icon?: string; // e.g. an emoji or icon name, kept simple for the template
+  slug?: { current: string };
+  price?: string;
+}
+const { title, summary, icon, slug, price } = Astro.props;
+const href = slug?.current ? `/services/${slug.current}` : undefined;
+---
+
+<article class="service-card">
+  {icon && <span class="icon">{icon}</span>}
+  <h3>{href ? <a href={href}>{title}</a> : title}</h3>
+  {summary && <p>{summary}</p>}
+  {price && <p class="price">{price}</p>}
+</article>
+
+<style>
+  .service-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+  }
+  .icon {
+    font-size: 1.5rem;
+  }
+  .price {
+    font-weight: 600;
+  }
+</style>

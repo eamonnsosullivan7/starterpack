@@ -1,0 +1,49 @@
+---
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  quote: string;
+  authorName: string;
+  authorRole?: string;
+  authorPhoto?: any;
+}
+const { quote, authorName, authorRole, authorPhoto } = Astro.props;
+const src = authorPhoto ? urlFor(authorPhoto).width(120).height(120).auto('format').url() : null;
+---
+
+<figure class="testimonial">
+  <blockquote>&ldquo;{quote}&rdquo;</blockquote>
+  <figcaption>
+    {src && <img src={src} alt="" />}
+    <span>
+      <strong>{authorName}</strong>
+      {authorRole && <span class="role">{authorRole}</span>}
+    </span>
+  </figcaption>
+</figure>
+
+<style>
+  .testimonial {
+    margin: 0;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background: #f7f7f7;
+  }
+  figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .role {
+    display: block;
+    color: #666;
+    font-size: 0.875rem;
+  }
+</style>

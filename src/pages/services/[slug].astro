@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getServiceBySlug, getAllServices } from '../../lib/sanity';
+
+export async function getStaticPaths() {
+  const services: any[] = await getAllServices();
+  return services.map((service) => ({
+    params: { slug: service.slug.current },
+  }));
+}
+
+const { slug } = Astro.params;
+const service = await getServiceBySlug(slug!);
+---
+
+<Layout title={service?.title ?? slug}>
+  <h1>{service?.title}</h1>
+  {service?.price && <p class="price">{service.price}</p>}
+  <div class="description">
+    {service?.description}
+  </div>
+</Layout>
+
+<style>
+  .price {
+    font-weight: 600;
+  }
+  .description {
+    max-width: 42rem;
+  }
+</style>

@@ -1,0 +1,38 @@
+---
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  heading: string;
+  subheading?: string;
+  image?: any;
+}
+const { heading, subheading, image } = Astro.props;
+const src = image ? urlFor(image).width(1600).auto('format').url() : null;
+---
+
+<section class="hero">
+  <div class="copy">
+    <h1>{heading}</h1>
+    {subheading && <p>{subheading}</p>}
+  </div>
+  {src && <img src={src} alt="" />}
+</section>
+
+<style>
+  .hero {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    padding-block: 4rem;
+  }
+  @media (min-width: 768px) {
+    .hero {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+</style>

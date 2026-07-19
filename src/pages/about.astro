@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getSimplePageBySlug } from '../lib/sanity';
+
+const page = await getSimplePageBySlug('about');
+
+// Portable text kept simple here — swap in @portabletext/to-html for
+// real bold/links/lists support once you need it.
+function plainText(blocks: any[] = []) {
+  return blocks.map((block) => (block.children || []).map((c: any) => c.text).join(''));
+}
+---
+
+<Layout title={page?.title ?? 'About'} description={page?.seoDescription}>
+  <h1>{page?.title}</h1>
+  {plainText(page?.body).map((para) => <p>{para}</p>)}
+</Layout>

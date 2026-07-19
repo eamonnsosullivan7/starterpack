@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import { getHomepage } from '../lib/sanity';
+
+const home = await getHomepage();
+---
+
+<Layout title="Home">
+  <Hero
+    heading={home?.heroHeading ?? 'Welcome'}
+    subheading={home?.heroSubheading}
+    image={home?.heroImage}
+  />
+
+  {home?.featuredServices?.length > 0 && (
+    <section class="services">
+      <h2>Services</h2>
+      <div class="grid">
+        {home.featuredServices.map((service: any) => (
+          <ServiceCard {...service} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {home?.featuredTestimonials?.length > 0 && (
+    <section class="testimonials">
+      <h2>What clients say</h2>
+      <div class="grid">
+        {home.featuredTestimonials.map((testimonial: any) => (
+          <TestimonialCard {...testimonial} />
+        ))}
+      </div>
+    </section>
+  )}
+</Layout>
+
+<style>
+  section {
+    padding-block: 3rem;
+  }
+  .grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+</style>
