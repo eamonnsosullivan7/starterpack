@@ -1,5 +1,6 @@
 ---
 import { getSiteSettings } from '../lib/sanity';
+import { urlFor } from '../lib/sanity';
 
 interface Props {
   title: string;
@@ -10,6 +11,9 @@ interface Props {
 const { title, description } = Astro.props;
 const settings = await getSiteSettings();
 const siteTitle = settings?.title ?? 'Site';
+const logoUrl = settings?.logo ? urlFor(settings.logo).height(64).url() : null;
+const faviconUrl = settings?.favicon ? urlFor(settings.favicon).width(64).height(64).url() : '/favicon.svg';
+
 ---
 
 <!doctype html>
@@ -19,11 +23,13 @@ const siteTitle = settings?.title ?? 'Site';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} · {siteTitle}</title>
     <meta name="description" content={description ?? settings?.description ?? ''} />
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" href={faviconUrl} />
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="/">{siteTitle}</a>
+        <a class="brand" href="/"> 
+        {logoUrl ? <img src={logoUrl} alt={siteTitle} /> : siteTitle}
+    </a>
       <nav>
         {settings?.navItems?.map((item: any) => (
           <a href={item.path}>{item.label}</a>

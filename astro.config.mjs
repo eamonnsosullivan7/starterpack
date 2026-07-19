@@ -1,18 +1,23 @@
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/serverless';
+import { loadEnv } from 'vite';
+import vercel from '@astrojs/vercel';
 import sanity from '@sanity/astro';
-import react from '@astrojs/react';
+
+const { SANITY_PROJECT_ID, SANITY_DATASET } = loadEnv(
+	process.env.NODE_ENV ?? 'development',
+	process.cwd(),
+	'',
+);
 
 export default defineConfig({
 	output: 'static', // switch to server if you need on-demand rendering / previewss
 	adapter: vercel(),
 	integrations: [
 		sanity({
-			projectId: process.env.SANITY_PROJECT_ID,
-			dataset: process.env.SANITY_DATASET || 'production',
+			projectId: SANITY_PROJECT_ID,
+			dataset: SANITY_DATASET || 'production',
 			useCdn: true,
 			apiVersion: 1.0,
 		}),
-		react(),
 	],
 });

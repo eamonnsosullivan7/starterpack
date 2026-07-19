@@ -24,6 +24,7 @@ export async function getSiteSettings() {
     title,
     description,
     logo,
+    favicon,
     "navItems": nav[]{ label, path },
     socialLinks
   }`);
@@ -54,7 +55,7 @@ export async function getServiceBySlug(slug: string) {
 		`*[_type == "service" && slug.current == $slug][0]{
       title, summary, description, icon, price
     }`,
-		{ slug }
+		{ slug },
 	);
 }
 
@@ -75,6 +76,6 @@ export async function getSimplePageBySlug(slug: string) {
 		`*[_type == "simplePage" && slug.current == $slug][0]{
       title, seoDescription, body
     }`,
-		{ slug }
+		{ slug },
 	);
 }
