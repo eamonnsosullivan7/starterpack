@@ -21,25 +21,35 @@ starterpack/
 │   ├── layouts/Layout.astro
 │   ├── components/
 │   │   ├── Hero.astro
+│   │   ├── ImageText.astro     # image + text, optionally reversed — used by
+│   │   │                       # the About page sections and the homepage
+│   │   │                       # about teaser
 │   │   ├── ServiceCard.astro
 │   │   └── TestimonialCard.astro
 │   ├── pages/
-│   │   ├── index.astro         # homepage: hero + featured services/testimonials
-│   │   ├── about.astro         # fixed page, content from a "simplePage" doc
+│   │   ├── index.astro         # homepage: hero + about teaser + featured
+│   │   │                       # services/testimonials
+│   │   ├── about.astro         # hero + alternating image/text sections,
+│   │   │                       # content from the "aboutPage" doc
+│   │   ├── contact.astro       # intro (from a "simplePage" doc) + a static
+│   │   │                       # contact form (submission not wired up yet)
 │   │   └── services/
 │   │       ├── index.astro     # lists every "service" document
 │   │       └── [slug].astro    # one page per service (still dynamic, but
 │   │                           # scoped to a single content type — not
 │   │                           # arbitrary page structure)
-│   └── lib/sanity.ts           # typed queries per content type
+│   └── lib/
+│       ├── sanity.ts           # typed queries per content type
+│       └── portableText.ts     # minimal portable-text -> paragraphs helper
 ├── studio/
 │   ├── sanity.config.ts
 │   └── schemaTypes/
 │       ├── siteSettings.ts     # singleton: nav (label + path), logo, socials
-│       ├── homepage.ts         # singleton: hero fields + featured refs
+│       ├── homepage.ts         # singleton: hero fields, about teaser, featured refs
+│       ├── aboutPage.ts        # singleton: hero fields + repeatable image/text sections
 │       ├── service.ts          # repeatable: title, summary, description, price
 │       ├── testimonial.ts      # repeatable: quote, author, photo
-│       └── simplePage.ts       # repeatable: title + rich text, for About/Contact
+│       └── simplePage.ts       # repeatable: title + rich text, for Contact/Privacy/etc.
 ├── astro.config.mjs
 └── .env.example
 ```
@@ -51,18 +61,22 @@ client-only action:
 
 1. Create the `.astro` file under `src/pages/` (or a subfolder for a section).
 2. Add a query to `src/lib/sanity.ts` if it needs its own content type.
-3. If it's just heading + rich text (like About), reuse the existing
-   `simplePage` schema — create a new `simplePage` document in the Studio
-   with a matching slug, no schema change needed.
+3. If it's just heading + rich text (like the Contact page intro), reuse the
+   existing `simplePage` schema — create a new `simplePage` document in the
+   Studio with a matching slug, no schema change needed. If it needs its own
+   layout (like About's hero + alternating image/text sections), give it a
+   dedicated schema instead.
 4. Add it to `siteSettings.nav` in the Studio so it shows up in navigation.
 
 ## What the client _can_ do without you
 
-- Edit homepage hero text/image, and which services/testimonials are featured
+- Edit homepage hero text/image, about teaser, and which services/testimonials are featured
+- Edit the About page's hero and content sections (heading, text, image,
+  and whether the image sits left or right) — add or reorder sections freely
 - Add, edit, remove, and reorder `service` documents (each automatically
   gets its own `/services/<slug>` page)
 - Add, edit, remove `testimonial` documents
-- Edit the rich text body of any `simplePage` (About, Contact, etc.)
+- Edit the rich text body of any `simplePage` (e.g. the Contact page intro)
 - Edit site settings: logo, nav labels, social links
 
 ## Getting started
@@ -78,8 +92,9 @@ client-only action:
    ```bash
    cd studio && npx sanity dev
    ```
-   Create `siteSettings` and `homepage` singleton documents, plus a few
-   `service`/`testimonial`/`simplePage` documents.
+   Create `siteSettings`, `homepage`, and `aboutPage` singleton documents,
+   plus a few `service`/`testimonial`/`simplePage` documents (a `simplePage`
+   with slug `contact` powers the Contact page's intro text).
 5. Run the Astro site:
    ```bash
    npm run dev
@@ -104,8 +119,8 @@ When starting a new project:
 
 1. Fork/clone this repo as a starting point.
 2. Spin up a new Sanity project (or dataset).
-3. Keep `Hero.astro`, the singleton/reference patterns, and the
-   `simplePage` type for miscellaneous content pages — adjust
+3. Keep `Hero.astro`, `ImageText.astro`, the singleton/reference patterns,
+   and the `simplePage` type for miscellaneous content pages — adjust
    `service`/`testimonial` fields (or replace them entirely) to fit the
    new site's actual content.
 

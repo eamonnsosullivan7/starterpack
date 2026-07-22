@@ -26,9 +26,11 @@
 		"@sanity/astro": "^3.4.2",
 		"@sanity/client": "^7.23.2",
 		"@sanity/image-url": "^2.1.1",
-		"astro": "^7.1.1"
+		"astro": "^7.1.1",
+		"astro-icon": "^1.1.5"
 	},
 	"devDependencies": {
+		"@iconify-json/iconoir": "^1.2.11",
 		"@types/node": "^26.1.1"
 	}
 }

@@ -1,0 +1,67 @@
+---
+import { urlFor } from '../lib/sanity';
+import { blocksToParagraphs } from '../lib/portableText';
+
+interface Props {
+	heading?: string;
+	text?: any;
+	image?: any;
+	reverse?: boolean;
+}
+const { heading, text, image, reverse = false } = Astro.props;
+const src = image ? urlFor(image).width(1200).auto('format').url() : null;
+---
+
+<section class:list={['image-text', { reverse }]}>
+	<!-- <div class='container'> -->
+	<div class='image-text-wrapper'>
+		<div class='copy'>
+			{heading && <h2>{heading}</h2>}
+			{blocksToParagraphs(text).map((para) => <p>{para}</p>)}
+		</div>
+
+		{src && <img src={src} alt='' />}
+	</div>
+	<!-- </div> -->
+</section>
+
+<style>
+	.image-text {
+		padding-block: 3rem;
+		padding-left: 3rem;
+		padding-right: 0;
+	}
+	.image-text.image-text.reverse {
+		padding-right: 3rem;
+		padding-left: 0;
+	}
+	.image-text-wrapper {
+		display: grid;
+		gap: 4rem;
+		align-items: center;
+	}
+	.copy {
+		max-width: 550px;
+	}
+
+	img {
+		width: 100%;
+		height: auto;
+		max-height: 500px;
+		object-fit: cover;
+		object-position: top;
+		border-radius: 0.5rem;
+	}
+
+	@media (min-width: 768px) {
+		.image-text-wrapper {
+			grid-template-columns: 1fr 1fr;
+		}
+		.image-text.reverse .copy {
+			order: 2;
+		}
+		.image-text.reverse img {
+			order: 1;
+		}
+	}
+</style>

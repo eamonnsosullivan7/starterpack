@@ -1,77 +1,155 @@
 ---
 import { getSiteSettings } from '../lib/sanity';
 import { urlFor } from '../lib/sanity';
+import { Icon } from 'astro-icon/components';
+import { iconoirIconName } from '../lib/icon';
+import Footer from '../components/Footer.astro';
 
 interface Props {
-  title: string;
-  description?: string;
-  children?: any;
+	title: string;
+	description?: string;
+	children?: any;
 }
 
 const { title, description } = Astro.props;
 const settings = await getSiteSettings();
 const siteTitle = settings?.title ?? 'Site';
 const logoUrl = settings?.logo ? urlFor(settings.logo).height(64).url() : null;
-const faviconUrl = settings?.favicon ? urlFor(settings.favicon).width(64).height(64).url() : '/favicon.svg';
+const faviconUrl = settings?.favicon
+	? urlFor(settings.favicon).width(64).height(64).url()
+	: '/favicon.svg';
+const instagramUrl = settings?.socialLinks?.find(
+	(link: any) => link.platform?.toLowerCase() === 'instagram',
+)?.url;
 
+const colorVars = {
+	colorPrimary: settings?.colors?.primary ?? '#111111',
+	colorSecondary: settings?.colors?.secondary ?? '#555555',
+	colorAccent: settings?.colors?.accent ?? '#2563eb',
+	colorTextPrimary: settings?.colors?.textPrimary ?? '#111111',
+	colorTextSecondary: settings?.colors?.textSecondary ?? '#555555',
+	colorTextTertiary: settings?.colors?.textTertiary ?? '#666',
+};
+
+const iconName = iconoirIconName('tools');
 ---
 
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} · {siteTitle}</title>
-    <meta name="description" content={description ?? settings?.description ?? ''} />
-    <link rel="icon" href={faviconUrl} />
-  </head>
-  <body>
-    <header class="site-header">
-        <a class="brand" href="/"> 
-        {logoUrl ? <img src={logoUrl} alt={siteTitle} /> : siteTitle}
-    </a>
-      <nav>
-        {settings?.navItems?.map((item: any) => (
-          <a href={item.path}>{item.label}</a>
-        ))}
-      </nav>
-    </header>
+<html lang='en'>
+	<head>
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<title>{title} · {siteTitle}</title>
+		<meta
+			name='description'
+			content={description ?? settings?.description ?? ''}
+		/>
+		<link rel='icon' href={faviconUrl} />
+	</head>
+	<body>
+		<header class='site-header'>
+			<a class='brand' href='/'>
+				{
+					logoUrl ? (
+						<img src={logoUrl} alt={siteTitle} />
+					) : (
+						<Icon class='icon' name={iconName} />
+					)
+				}
+			</a>
+			<nav>
+				{
+					settings?.navItems?.map((item: any) => (
+						<a href={item.path}>{item.label}</a>
+					))
+				}
+			</nav>
+		</header>
 
-    <main>
-      <slot />
-    </main>
+		<main>
+			<slot />
+		</main>
 
-    <footer class="site-footer">
-      <p>&copy; {new Date().getFullYear()} {siteTitle}</p>
-    </footer>
+		<Footer
+			logoUrl={logoUrl ?? ''}
+			companyName={settings?.companyName ?? siteTitle}
+			companyAddress={settings?.companyAddress}
+			phone={settings?.phone}
+			instagramUrl={instagramUrl}
+		/>
 
-    <style>
-      :root {
-        --max-width: 72rem;
-        --space-md: 1.5rem;
-      }
-      body {
-        margin: 0;
-        font-family: system-ui, sans-serif;
-        line-height: 1.5;
-      }
-      .site-header,
-      .site-footer {
-        max-width: var(--max-width);
-        margin-inline: auto;
-        padding: var(--space-md);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      main {
-        max-width: var(--max-width);
-        margin-inline: auto;
-        padding: var(--space-md);
-      }
-      nav a {
-        margin-left: 1rem;
-      }
-    </style>
-  </body>
+		<style define:vars={colorVars}>
+			:root {
+				--max-width: 72rem;
+				--space-sml: 1rem;
+				--space-md: 1.5rem;
+				--space-lg: 2rem;
+				--space-xl: 3rem;
+				--color-primary: var(--colorPrimary);
+				--color-secondary: var(--colorSecondary);
+				--color-accent: var(--colorAccent);
+				--color-text-primary: var(--colorTextPrimary);
+				--color-text-secondary: var(--colorTextSecondary);
+				--color-text-tertiary: var(--colorTextTertiary);
+			}
+			body {
+				margin: 0;
+				font-family: system-ui, sans-serif;
+				line-height: 1.5;
+				background-color: var(--color-primary);
+				color: var(--color-text-secondary);
+			}
+
+			.site-header {
+				max-width: var(--max-width);
+				margin-inline: auto;
+				padding: var(--space-md);
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			main {
+				margin-inline: auto;
+				padding-bottom: 80px;
+			}
+			nav a {
+				margin-left: 1rem;
+				color: var(--color-secondary);
+				text-decoration: none;
+			}
+			a.brand {
+				font-weight: 800;
+				text-decoration: none;
+				font-size: 2rem;
+				color: var(--color-secondary);
+			}
+		</style>
+
+		<style is:global>
+			.container {
+				max-width: var(--max-width);
+				width: 100%;
+				margin: auto;
+			}
+
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6 {
+				color: var(--color-text-primary);
+			}
+
+			a {
+				color: inherit;
+				text-decoration: underline;
+				text-underline-offset: 3px;
+			}
+
+			p {
+				margin: 0 0 1rem 0;
+			}
+		</style>
+	</body>
 </html>

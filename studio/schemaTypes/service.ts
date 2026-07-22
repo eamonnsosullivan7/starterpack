@@ -14,7 +14,13 @@ export default defineType({
     }),
     defineField({ name: 'summary', title: 'Short summary', type: 'text', rows: 2 }),
     defineField({ name: 'description', title: 'Full description', type: 'text', rows: 6 }),
-    defineField({ name: 'icon', title: 'Icon (emoji or short label)', type: 'string' }),
+    defineField({
+      name: 'icon',
+      title: 'Icon',
+      type: 'string',
+      description:
+        'An Iconoir icon name, e.g. "code-bracket" — browse names at icon-sets.iconify.design/iconoir (omit the "iconoir:" prefix).',
+    }),
     defineField({ name: 'price', title: 'Price (display text, e.g. "From $500")', type: 'string' }),
     defineField({
       name: 'orderRank',

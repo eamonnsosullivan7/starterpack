@@ -26,7 +26,11 @@ export async function getSiteSettings() {
     logo,
     favicon,
     "navItems": nav[]{ label, path },
-    socialLinks
+    socialLinks,
+    colors,
+    companyName,
+    companyAddress,
+    phone
   }`);
 }
 
@@ -37,8 +41,24 @@ export async function getHomepage() {
     heroHeading,
     heroSubheading,
     heroImage,
+    aboutHeading,
+    aboutText,
+    aboutImage,
     "featuredServices": featuredServices[]->{ _id, title, summary, icon, slug },
-    "featuredTestimonials": featuredTestimonials[]->{ _id, quote, authorName, authorRole, authorPhoto }
+    "featuredTestimonials": featuredTestimonials[]->{ _id, quote, authorName, authorRole, authorPhoto },
+    "selectedWork": selectedWork[]->{ _id, title, shortDescription, coverImage, slug }
+  }`);
+}
+
+// --- About page (singleton) -----------------------------------------------
+
+export async function getAboutPage() {
+	return client.fetch(`*[_type == "aboutPage"][0]{
+    seoDescription,
+    heroHeading,
+    heroSubheading,
+    heroImage,
+    sections[]{ heading, text, image, imagePosition }
   }`);
 }
 
@@ -67,7 +87,24 @@ export async function getAllTestimonials() {
   }`);
 }
 
-// --- Simple content pages (About, Contact, etc.) ----------------------------
+// --- Projects ----------------------------------------------------------------
+
+export async function getAllProjects() {
+	return client.fetch(`*[_type == "project"] | order(orderRank asc) {
+    _id, title, shortDescription, coverImage, slug
+  }`);
+}
+
+export async function getProjectBySlug(slug: string) {
+	return client.fetch(
+		`*[_type == "project" && slug.current == $slug][0]{
+      title, description, coverImage, gallery, slug
+    }`,
+		{ slug },
+	);
+}
+
+// --- Simple content pages (Contact intro, Privacy Policy, etc.) ------------
 // For pages that are just "a heading and some rich text" rather than a
 // structured content type of their own.
 

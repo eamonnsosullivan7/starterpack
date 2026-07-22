@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getProjectBySlug, getAllProjects, urlFor } from '../../lib/sanity';
+import { blocksToParagraphs } from '../../lib/portableText';
+
+export async function getStaticPaths() {
+  const projects: any[] = await getAllProjects();
+  return projects.map((project) => ({
+    params: { slug: project.slug.current },
+  }));
+}
+
+const { slug } = Astro.params;
+const project = await getProjectBySlug(slug!);
+const coverSrc = project?.coverImage
+  ? urlFor(project.coverImage).width(1600).auto('format').url()
+  : null;
+---
+
+<Layout title={project?.title ?? slug}>
+  <div class="container">
+    <h1>{project?.title}</h1>
+    {coverSrc && <img class="cover" src={coverSrc} alt="" />}
+
+    <div class="description">
+      {blocksToParagraphs(project?.description).map((para) => <p>{para}</p>)}
+    </div>
+
+    {project?.gallery?.length > 0 && (
+      <div class="gallery">
+        {project.gallery.map((image: any) => (
+          <img src={urlFor(image).width(1000).auto('format').url()} alt="" />
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>
+
+<style>
+  .cover {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin-block: 1.5rem;
+  }
+  .description {
+    max-width: 42rem;
+  }
+  .gallery {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .gallery img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+</style>

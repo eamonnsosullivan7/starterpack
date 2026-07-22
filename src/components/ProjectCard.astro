@@ -1,0 +1,62 @@
+---
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+	title: string;
+	shortDescription?: string;
+	coverImage?: any;
+	slug?: { current: string };
+	showButton?: boolean;
+}
+const {
+	title,
+	shortDescription,
+	coverImage,
+	slug,
+	showButton = false,
+} = Astro.props;
+const href = slug?.current ? `/projects/${slug.current}` : undefined;
+const src = coverImage
+	? urlFor(coverImage).width(800).height(600).auto('format').url()
+	: null;
+---
+
+<article class='project-card'>
+	{
+		href ? (
+			<a href={href}>{src && <img src={src} alt='' />}</a>
+		) : (
+			src && <img src={src} alt='' />
+		)
+	}
+	<h3>{href ? <a href={href}>{title}</a> : title}</h3>
+	{shortDescription && <p>{shortDescription}</p>}
+	{
+		showButton && href && (
+			<a class='view-project' href={href}>
+				View project →
+			</a>
+		)
+	}
+</article>
+
+<style>
+	.project-card img {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		border-radius: 0.5rem;
+	}
+	h3 {
+		margin-bottom: 4px;
+	}
+	h3 a {
+		text-decoration: none;
+	}
+
+	.view-project {
+		display: inline-block;
+		margin-top: 0.5rem;
+		font-weight: 600;
+	}
+</style>

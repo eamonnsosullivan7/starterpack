@@ -1,0 +1,92 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+	logoUrl?: string;
+	companyName?: string;
+	companyAddress?: string;
+	phone?: string;
+	instagramUrl?: string;
+}
+const { logoUrl, companyName, companyAddress, phone, instagramUrl } =
+	Astro.props;
+const telHref = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : undefined;
+---
+
+<footer class='footer'>
+	<div class='container'>
+		<div class='footer-wrapper'>
+			<a class='brand' href='/'>
+				{logoUrl ? <img src={logoUrl} alt={companyName} /> : companyName}
+			</a>
+			<div class='footer-details'>
+				{companyName && <p class='company-name'>{companyName}</p>}
+				{companyAddress && <p>{companyAddress}</p>}
+				{
+					phone && (
+						<p>
+							<a href={telHref}>{phone}</a>
+						</p>
+					)
+				}
+				{
+					instagramUrl && (
+						<a
+							class='social-link'
+							href={instagramUrl}
+							target='_blank'
+							rel='noopener noreferrer'
+							aria-label='Instagram'
+						>
+							<Icon name='iconoir:instagram' />
+						</a>
+					)
+				}
+
+				<p class='copyright'>&copy; {new Date().getFullYear()} {companyName}</p>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		background-color: var(--color-secondary);
+		color: var(--color-primary);
+		margin-inline: auto;
+		padding: var(--space-xl) var(--space-md);
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.footer-wrapper {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+	}
+
+	a.brand {
+		font-weight: 800;
+		text-decoration: none;
+		font-size: 2rem;
+		color: var(--color-primary);
+	}
+
+	.footer-details p {
+		margin: 0.25rem 0;
+		text-align: right;
+	}
+	.social-link {
+		display: inline-flex;
+		text-decoration: none;
+	}
+	.social-link :global(svg) {
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+	.copyright {
+		width: 100%;
+		margin: 0;
+		font-size: 0.875rem;
+	}
+</style>

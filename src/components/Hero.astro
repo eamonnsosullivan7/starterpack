@@ -2,37 +2,53 @@
 import { urlFor } from '../lib/sanity';
 
 interface Props {
-  heading: string;
-  subheading?: string;
-  image?: any;
+	heading: string;
+	subheading?: string;
+	image?: any;
 }
 const { heading, subheading, image } = Astro.props;
 const src = image ? urlFor(image).width(1600).auto('format').url() : null;
 ---
 
-<section class="hero">
-  <div class="copy">
-    <h1>{heading}</h1>
-    {subheading && <p>{subheading}</p>}
-  </div>
-  {src && <img src={src} alt="" />}
+<section class='hero'>
+	<div class='hero-wrapper'>
+		<div class='copy'>
+			<h1>{heading}</h1>
+			{subheading && <p>{subheading}</p>}
+		</div>
+		{src && <img src={src} alt='' />}
+	</div>
 </section>
 
 <style>
-  .hero {
-    display: grid;
-    gap: 2rem;
-    align-items: center;
-    padding-block: 4rem;
-  }
-  @media (min-width: 768px) {
-    .hero {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  img {
-    width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
-  }
+	.hero {
+		padding-block: 4rem;
+	}
+
+	.hero-wrapper {
+		display: grid;
+		gap: 4rem;
+		align-items: center;
+		justify-content: flex-end;
+	}
+	@media (min-width: 768px) {
+		.hero-wrapper {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	h1 {
+		color: var(--color-text-primary);
+		text-align: right;
+		max-width: 500px;
+		justify-self: flex-end;
+	}
+	img {
+		width: 100%;
+		height: auto;
+	}
+
+	.copy {
+		padding-left: 3rem;
+	}
 </style>
