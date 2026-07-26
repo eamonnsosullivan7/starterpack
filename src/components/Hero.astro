@@ -12,9 +12,11 @@ const src = image ? urlFor(image).width(1600).auto('format').url() : null;
 
 <section class='hero'>
 	<div class='hero-wrapper'>
-		<div class='copy'>
-			<h1>{heading}</h1>
-			{subheading && <p>{subheading}</p>}
+		<div class='copy-wrapper'>
+			<div class='copy'>
+				<h1>{heading}</h1>
+				{subheading && <p>{subheading}</p>}
+			</div>
 		</div>
 		{src && <img src={src} alt='' />}
 	</div>
@@ -27,28 +29,48 @@ const src = image ? urlFor(image).width(1600).auto('format').url() : null;
 
 	.hero-wrapper {
 		display: grid;
-		gap: 4rem;
+		gap: 3rem;
 		align-items: center;
 		justify-content: flex-end;
-	}
-	@media (min-width: 768px) {
-		.hero-wrapper {
-			grid-template-columns: 1fr 1fr;
-		}
 	}
 
 	h1 {
 		color: var(--color-text-primary);
-		text-align: right;
-		max-width: 500px;
-		justify-self: flex-end;
 	}
 	img {
 		width: 100%;
 		height: auto;
+		max-height: 100vh;
+	}
+	.copy-wrapper {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+	.copy {
+		text-align: left;
+		max-width: 500px;
 	}
 
-	.copy {
-		padding-left: 3rem;
+	@media (min-width: 768px) {
+		.hero-wrapper {
+			grid-template-columns: 1fr 1fr;
+			justify-content: flex-end;
+		}
+		.copy-wrapper {
+			display: flex;
+			justify-content: flex-end;
+		}
+
+		.copy {
+			text-align: right;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+		}
+		h1 {
+			color: var(--color-text-primary);
+			text-align: right;
+			justify-self: flex-end;
+		}
 	}
 </style>

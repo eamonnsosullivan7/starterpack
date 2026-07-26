@@ -1,10 +1,15 @@
 import { defineField, defineType } from 'sanity';
 
+// Display order is drag-and-drop via the "Services" list in the Studio
+// sidebar (see sanity.config.ts) — orderRank is hidden because the
+// orderable-document-list plugin writes to it directly; it's not meant to
+// be typed in by hand.
 export default defineType({
   name: 'service',
   title: 'Service',
   type: 'document',
   fields: [
+    defineField({ name: 'orderRank', type: 'string', hidden: true }),
     defineField({ name: 'title', type: 'string', validation: (Rule) => Rule.required() }),
     defineField({
       name: 'slug',
@@ -22,12 +27,6 @@ export default defineType({
         'An Iconoir icon name, e.g. "code-bracket" — browse names at icon-sets.iconify.design/iconoir (omit the "iconoir:" prefix).',
     }),
     defineField({ name: 'price', title: 'Price (display text, e.g. "From $500")', type: 'string' }),
-    defineField({
-      name: 'orderRank',
-      title: 'Display order',
-      type: 'number',
-      description: 'Lower numbers show first.',
-    }),
   ],
   preview: {
     select: { title: 'title', subtitle: 'summary' },

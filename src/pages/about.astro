@@ -7,19 +7,23 @@ import { getAboutPage } from '../lib/sanity';
 const page = await getAboutPage();
 ---
 
-<Layout title="About" description={page?.seoDescription}>
-  <Hero
-    heading={page?.heroHeading ?? 'About us'}
-    subheading={page?.heroSubheading}
-    image={page?.heroImage}
-  />
+<Layout title='About' description={page?.seoDescription}>
+	<div class='container'>
+		<Hero
+			heading={page?.heroHeading ?? 'About us'}
+			subheading={page?.heroSubheading}
+			image={page?.heroImage}
+		/>
 
-  {page?.sections?.map((section: any) => (
-    <ImageText
-      heading={section.heading}
-      text={section.text}
-      image={section.image}
-      reverse={section.imagePosition === 'right'}
-    />
-  ))}
+		{
+			page?.sections?.map((section: any) => (
+				<ImageText
+					heading={section.heading}
+					text={section.text}
+					image={section.image}
+					reverse={section.imagePosition === 'right'}
+				/>
+			))
+		}
+	</div>
 </Layout>

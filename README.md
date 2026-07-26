@@ -1,6 +1,6 @@
 # starterpack
 
-A reusable site template: **Astro** (frontend) + **Sanity** (CMS) + **Vercel** (hosting).
+A reusable site template: **Astro** (frontend) + **Sanity** (CMS) + **Cloudflare Pages** (hosting).
 
 ## Approach: developer-defined pages, Sanity-controlled content
 
@@ -102,14 +102,27 @@ client-only action:
 
 ## Deploying
 
-- **Astro site → Vercel**: import the repo, Vercel auto-detects Astro. Add
-  `SANITY_PROJECT_ID` and `SANITY_DATASET` as environment variables.
+- **Astro site → Cloudflare Pages**: in the Cloudflare dashboard, create a
+  Pages project from the repo. Framework preset: Astro. Build command:
+  `npm run build`. Build output directory: `dist/client` (the
+  `@astrojs/cloudflare` adapter splits its build into `dist/client` — the
+  actual static site — and `dist/server`, an internal build-time artifact
+  that isn't deployed). Add `SANITY_PROJECT_ID` and `SANITY_DATASET` as
+  environment variables in the Pages project settings.
+  - Alternatively, deploy from the CLI with `npm run deploy` (runs
+    `astro build && wrangler pages deploy ./dist/client`) once you've run
+    `npx wrangler login` once locally.
+  - `wrangler.jsonc` at the repo root sets the `nodejs_compat` compatibility
+    flag, which some dependencies (via `@sanity/client`) need. Don't add
+    `pages_build_output_dir` to it — combining that with this adapter
+    currently breaks the build (it collides with Cloudflare Pages' reserved
+    `ASSETS` binding name).
 - **Sanity Studio**: deploy separately with `npx sanity deploy` from
   inside `/studio` — gives editors a hosted URL, independent from the
-  Vercel site deploy.
-- **Rebuild on content change**: add a Sanity webhook that hits a Vercel
-  Deploy Hook URL whenever a document changes, so the static site rebuilds
-  automatically when someone publishes an edit.
+  Cloudflare Pages site deploy.
+- **Rebuild on content change**: add a Sanity webhook that hits a Cloudflare
+  Pages Deploy Hook URL whenever a document changes, so the static site
+  rebuilds automatically when someone publishes an edit.
 
 ## Reusing this for the next site
 

@@ -11,20 +11,24 @@ const home = await getHomepage();
 ---
 
 <Layout title='Home'>
-	<Hero
-		heading={home?.heroHeading ?? 'Welcome'}
-		subheading={home?.heroSubheading}
-		image={home?.heroImage}
-	/>
+	<div class='container'>
+		<Hero
+			heading={home?.heroHeading ?? 'Welcome'}
+			subheading={home?.heroSubheading}
+			image={home?.heroImage}
+		/>
+	</div>
 
 	{
 		home?.aboutHeading && (
-			<ImageText
-				heading={home.aboutHeading}
-				text={home.aboutText}
-				image={home.aboutImage}
-				reverse={true}
-			/>
+			<div class='container'>
+				<ImageText
+					heading={home.aboutHeading}
+					text={home.aboutText}
+					image={home.aboutImage}
+					reverse={true}
+				/>
+			</div>
 		)
 	}
 
@@ -38,9 +42,11 @@ const home = await getHomepage();
 							<ProjectCard {...project} />
 						))}
 					</div>
-					<a class='view-all' href='/projects'>
-						View all projects →
-					</a>
+					<div class='view-all-wrapper'>
+						<a class='view-all' href='/projects'>
+							View all projects →
+						</a>
+					</div>
 				</div>
 			</section>
 		)
@@ -56,9 +62,11 @@ const home = await getHomepage();
 							<ServiceCard {...service} />
 						))}
 					</div>
-					<a class='view-all' href='/services'>
-						View all services →
-					</a>
+					<div class='view-all-wrapper'>
+						<a class='view-all' href='/services'>
+							View all services →
+						</a>
+					</div>
 				</div>
 			</section>
 		)
@@ -78,6 +86,16 @@ const home = await getHomepage();
 			</section>
 		)
 	}
+
+	<section class='cta'>
+		<div class='container'>
+			<div class='form-wrapper'>
+				<h2>Let's work together...</h2>
+
+				<a class='btn-primary' href='/contact'>Send us a message</a>
+			</div>
+		</div>
+	</section>
 </Layout>
 
 <style>
@@ -89,9 +107,42 @@ const home = await getHomepage();
 		gap: 1.5rem;
 		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 	}
+
+	h2 {
+		font-size: 2rem;
+		margin: 3rem 0 1.5rem 0;
+	}
+
+	.view-all-wrapper {
+		display: flex;
+		justify-content: flex-end;
+	}
 	.view-all {
 		display: inline-block;
 		margin-top: 1.5rem;
 		font-weight: 600;
+		color: var(--color-text-seconday);
+	}
+
+	.services {
+		background-color: var(--color-secondary);
+		color: var(--color-primary);
+	}
+	.services h2 {
+		color: var(--color-primary);
+	}
+	.form-wrapper {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+	}
+	.btn-primary {
+		padding: 1rem 2rem;
+		background-color: var(--color-secondary);
+		color: var(--color-primary);
+		text-decoration: none;
+		border-radius: 0.5rem;
 	}
 </style>

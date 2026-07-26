@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 import sanity from '@sanity/astro';
 
 import icon from 'astro-icon';
@@ -13,7 +13,7 @@ const { SANITY_PROJECT_ID, SANITY_DATASET } = loadEnv(
 
 export default defineConfig({
 	output: 'static', // switch to server if you need on-demand rendering / previewss
-	adapter: vercel(),
+	adapter: cloudflare(),
 	integrations: [
 		sanity({
 			projectId: SANITY_PROJECT_ID,
@@ -23,4 +23,11 @@ export default defineConfig({
 		}),
 		icon(),
 	],
+	vite: {
+		ssr: {
+			optimizeDeps: {
+				include: ['@iconify/utils'],
+			},
+		},
+	},
 });

@@ -1,10 +1,15 @@
 import { defineField, defineType } from 'sanity';
 
+// Display order is drag-and-drop via the "Projects" list in the Studio
+// sidebar (see sanity.config.ts) — orderRank is hidden because the
+// orderable-document-list plugin writes to it directly; it's not meant to
+// be typed in by hand.
 export default defineType({
   name: 'project',
   title: 'Project',
   type: 'document',
   fields: [
+    defineField({ name: 'orderRank', type: 'string', hidden: true }),
     defineField({ name: 'title', type: 'string', validation: (Rule) => Rule.required() }),
     defineField({
       name: 'slug',
@@ -40,12 +45,6 @@ export default defineType({
       of: [{ type: 'image', options: { hotspot: true } }],
       description: 'Shown on the individual project page, below the description.',
       validation: (Rule) => Rule.max(3).warning('Usually looks best with 3 or fewer additional images'),
-    }),
-    defineField({
-      name: 'orderRank',
-      title: 'Display order',
-      type: 'number',
-      description: 'Lower numbers show first.',
     }),
   ],
   preview: {

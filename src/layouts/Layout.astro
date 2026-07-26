@@ -88,13 +88,13 @@ const iconName = iconoirIconName('tools');
 				--color-primary: var(--colorPrimary);
 				--color-secondary: var(--colorSecondary);
 				--color-accent: var(--colorAccent);
-				--color-text-primary: var(--colorTextPrimary);
-				--color-text-secondary: var(--colorTextSecondary);
-				--color-text-tertiary: var(--colorTextTertiary);
+				--color-text-primary: #1a1a1a;
+				--color-text-secondary: #57534d;
+				--color-text-tertiary: #847e77;
 			}
 			body {
 				margin: 0;
-				font-family: system-ui, sans-serif;
+				font-family: Arial, Helvetica, sans-serif;
 				line-height: 1.5;
 				background-color: var(--color-primary);
 				color: var(--color-text-secondary);
@@ -112,10 +112,14 @@ const iconName = iconoirIconName('tools');
 				margin-inline: auto;
 				padding-bottom: 80px;
 			}
+
 			nav a {
-				margin-left: 1rem;
+				margin-left: 2rem;
 				color: var(--color-secondary);
 				text-decoration: none;
+			}
+			nav a:hover {
+				text-decoration: underline;
 			}
 			a.brand {
 				font-weight: 800;
@@ -126,10 +130,14 @@ const iconName = iconoirIconName('tools');
 		</style>
 
 		<style is:global>
+			* {
+				box-sizing: border-box;
+			}
 			.container {
 				max-width: var(--max-width);
 				width: 100%;
 				margin: auto;
+				padding: 0px 16px;
 			}
 
 			h1,

@@ -13,32 +13,23 @@ const src = image ? urlFor(image).width(1200).auto('format').url() : null;
 ---
 
 <section class:list={['image-text', { reverse }]}>
-	<!-- <div class='container'> -->
-	<div class='image-text-wrapper'>
+	<div class='copy-wrapper'>
 		<div class='copy'>
 			{heading && <h2>{heading}</h2>}
 			{blocksToParagraphs(text).map((para) => <p>{para}</p>)}
 		</div>
-
-		{src && <img src={src} alt='' />}
 	</div>
-	<!-- </div> -->
-</section>
 
+	{src && <img src={src} alt='' />}
+</section>
 <style>
 	.image-text {
-		padding-block: 3rem;
-		padding-left: 3rem;
-		padding-right: 0;
-	}
-	.image-text.image-text.reverse {
-		padding-right: 3rem;
-		padding-left: 0;
-	}
-	.image-text-wrapper {
+		padding-block: 1rem;
 		display: grid;
-		gap: 4rem;
-		align-items: center;
+		gap: 3rem;
+	}
+	.copy-wrapper {
+		padding: 0rem 1rem;
 	}
 	.copy {
 		max-width: 550px;
@@ -47,17 +38,27 @@ const src = image ? urlFor(image).width(1200).auto('format').url() : null;
 	img {
 		width: 100%;
 		height: auto;
-		max-height: 500px;
+		max-height: 600px;
 		object-fit: cover;
-		object-position: top;
-		border-radius: 0.5rem;
 	}
 
 	@media (min-width: 768px) {
-		.image-text-wrapper {
+		.copy-wrapper {
+			padding: 2rem;
+			display: flex;
+			align-items: center;
+		}
+		:not(.reverse) .copy-wrapper {
+			justify-content: flex-end;
+			text-align: right;
+		}
+		.reverse .copy-wrapper {
+			padding-right: 3rem;
+		}
+		.image-text {
 			grid-template-columns: 1fr 1fr;
 		}
-		.image-text.reverse .copy {
+		.image-text.reverse .copy-wrapper {
 			order: 2;
 		}
 		.image-text.reverse img {

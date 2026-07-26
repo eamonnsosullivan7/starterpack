@@ -9,9 +9,10 @@ import project from './project';
 export const schemaTypes = [
   siteSettings,
   homepage,
+  project,
   service,
   testimonial,
-  simplePage,
   aboutPage,
-  project,
+  simplePage,
+
 ];
