@@ -1,30 +1,28 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getProjectBySlug, getAllProjects, urlFor } from '../../lib/sanity';
+import { getProjectBySlug, getAllProjects } from '../../lib/sanity';
+import { imageUrl } from '../../lib/image';
 import { blocksToParagraphs } from '../../lib/portableText';
 import { Icon } from 'astro-icon/components';
-import { iconoirIconName } from '../../lib/icon';
 
 export async function getStaticPaths() {
-	const projects: any[] = await getAllProjects();
+	const projects = await getAllProjects();
 	return projects.map((project) => ({
-		params: { slug: project.slug.current },
+		params: { slug: project.slug!.current },
 	}));
 }
 
 const { slug } = Astro.params;
 const project = await getProjectBySlug(slug!);
-const coverSrc = project?.coverImage
-	? urlFor(project.coverImage).width(1600).auto('format').url()
-	: null;
+const coverSrc = imageUrl(project?.coverImage, { width: 1600 });
 
-const iconBack = iconoirIconName('arrow-left');
+const projectGallery = project?.gallery ?? [];
 ---
 
 <Layout title={project?.title ?? slug}>
 	<div class='container'>
 		<a href='/projects' class='back-button'>
-			<Icon class='icon' name={iconBack} /> Back to Projects
+			<Icon class='icon' name={`iconoir:arrow-left`} /> Back to Projects
 		</a>
 		<div class='project-layout'>
 			<div class='info'>
@@ -41,13 +39,10 @@ const iconBack = iconoirIconName('arrow-left');
 			{coverSrc && <img class='cover' src={coverSrc} alt='' />}
 
 			{
-				project?.gallery?.length > 0 && (
+				projectGallery.length > 0 && (
 					<div class='gallery'>
-						{project.gallery.map((image: any) => (
-							<img
-								src={urlFor(image).width(1000).auto('format').url()}
-								alt=''
-							/>
+						{projectGallery.map((image) => (
+							<img src={imageUrl(image, { width: 1000 })} alt='' />
 						))}
 					</div>
 				)

@@ -1,11 +1,12 @@
 ---
-import { urlFor } from '../lib/sanity';
+import { imageUrl } from '../lib/image';
+import type { SanityImage, Slug } from '../lib/types';
 
 interface Props {
 	title: string;
 	shortDescription?: string;
-	coverImage?: any;
-	slug?: { current: string };
+	coverImage?: SanityImage;
+	slug?: Slug;
 	showButton?: boolean;
 }
 const {
@@ -16,9 +17,7 @@ const {
 	showButton = false,
 } = Astro.props;
 const href = slug?.current ? `/projects/${slug.current}` : undefined;
-const src = coverImage
-	? urlFor(coverImage).width(800).height(600).auto('format').url()
-	: null;
+const src = imageUrl(coverImage, { width: 800, height: 600 });
 ---
 
 <article class='project-card'>

@@ -1,13 +1,14 @@
 ---
-import { urlFor } from '../lib/sanity';
+import { imageUrl } from '../lib/image';
+import type { SanityImage } from '../lib/types';
 
 interface Props {
 	heading: string;
 	subheading?: string;
-	image?: any;
+	image?: SanityImage;
 }
 const { heading, subheading, image } = Astro.props;
-const src = image ? urlFor(image).width(1600).auto('format').url() : null;
+const src = imageUrl(image, { width: 1600 });
 ---
 
 <section class='hero'>
@@ -24,7 +25,7 @@ const src = image ? urlFor(image).width(1600).auto('format').url() : null;
 
 <style>
 	.hero {
-		padding-block: 4rem;
+		padding-block: var(--section-block);
 	}
 
 	.hero-wrapper {

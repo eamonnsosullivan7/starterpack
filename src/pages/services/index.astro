@@ -9,7 +9,7 @@ const services = await getAllServices();
 <Layout title="Services">
   <h1>Services</h1>
   <div class="grid">
-    {services.map((service: any) => (
+    {services.map((service) => (
       <ServiceCard {...service} />
     ))}
   </div>

@@ -5,6 +5,7 @@ import testimonial from './testimonial';
 import simplePage from './simplePage';
 import aboutPage from './aboutPage';
 import project from './project';
+import faq from './faq';
 
 export const schemaTypes = [
   siteSettings,
@@ -12,6 +13,7 @@ export const schemaTypes = [
   project,
   service,
   testimonial,
+  faq,
   aboutPage,
   simplePage,
 

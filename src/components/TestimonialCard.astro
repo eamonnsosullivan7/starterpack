@@ -1,20 +1,23 @@
 ---
-import { urlFor } from '../lib/sanity';
+import { Icon } from 'astro-icon/components';
+import { imageUrl } from '../lib/image';
+import type { SanityImage } from '../lib/types';
 
 interface Props {
 	quote: string;
 	authorName: string;
 	authorRole?: string;
-	authorPhoto?: any;
+	authorPhoto?: SanityImage;
 }
 const { quote, authorName, authorRole, authorPhoto } = Astro.props;
-const src = authorPhoto
-	? urlFor(authorPhoto).width(120).height(120).auto('format').url()
-	: null;
+const src = imageUrl(authorPhoto, { width: 120, height: 120 });
 ---
 
 <figure class='testimonial'>
-	<blockquote>&ldquo;{quote}&rdquo;</blockquote>
+	<blockquote>
+		<Icon class='quote-icon' name='iconoir:quote-solid' />
+		{quote}&rdquo;
+	</blockquote>
 	<figcaption>
 		{src && <img src={src} alt='' />}
 		<span>
@@ -34,16 +37,14 @@ const src = authorPhoto
 		justify-content: space-between;
 		flex-direction: column;
 	}
-
-	blockquote {
-		margin: 0.5rem;
+	.quote-icon {
+		height: 2rem;
+		width: 2rem;
+		transform: scale(-1);
+		display: block;
 	}
-	.testimonial::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background-color: var(--color-secondary);
-		opacity: 0.1;
+	blockquote {
+		margin: 0rem;
 	}
 	figcaption {
 		display: flex;

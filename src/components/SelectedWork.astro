@@ -1,0 +1,54 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import type { Project } from '../lib/types';
+
+interface Props {
+	heading?: string;
+	items: Project[];
+	viewAllHref?: string;
+}
+const { heading = 'Selected Work', items, viewAllHref = '/projects' } = Astro.props;
+---
+
+<section class='selected-work'>
+	<div class='container'>
+		<h2>{heading}</h2>
+		<div class='grid'>
+			{items.map((project) => <ProjectCard {...project} />)}
+		</div>
+		<div class='view-all-wrapper'>
+			<a class='view-all' href={viewAllHref}> View all projects → </a>
+		</div>
+	</div>
+</section>
+
+<style>
+	.selected-work {
+		padding-block: var(--section-block);
+	}
+	.grid {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	}
+	h2 {
+		font-size: 2rem;
+		margin: 3rem 0 1.5rem 0;
+	}
+	.view-all-wrapper {
+		display: flex;
+		justify-content: flex-end;
+	}
+	.view-all {
+		display: inline-block;
+		margin-top: 1.5rem;
+		font-weight: 600;
+		color: var(--color-text-seconday);
+	}
+
+	@media (min-width: 992px) {
+		.grid {
+			gap: 2rem;
+		}
+	}
+</style>

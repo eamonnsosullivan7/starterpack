@@ -1,0 +1,166 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { Faq as FaqItem } from '../lib/types';
+
+interface Props {
+	heading?: string;
+	items: FaqItem[];
+}
+const { heading, items } = Astro.props;
+---
+
+<section class='faq'>
+	<div class='faq-wrapper'>
+		{
+			heading && (
+				<div class='faq-heading'>
+					<h2>{heading}</h2>
+				</div>
+			)
+		}
+		<div class='faq-faqs'>
+			{
+				items.map((item) => (
+					<details class='item'>
+						<summary>
+							<span class='question'>{item.question}</span>
+							<span class='icon-badge' aria-hidden='true'>
+								<Icon class='icon icon-plus' name='iconoir:plus' />
+								<Icon class='icon icon-minus' name='iconoir:minus' />
+							</span>
+						</summary>
+						<div class='content'>
+							<div class='content-inner'>
+								{item.answer && <p class='answer'>{item.answer}</p>}
+							</div>
+						</div>
+					</details>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.faq {
+		padding-block: var(--section-block);
+	}
+	h2 {
+		font-size: 2rem;
+		margin: 0 0 1.5rem 0;
+	}
+
+	.faq-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.faq-heading {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+		flex: 1;
+	}
+
+	.chat-icon {
+		height: 2.5rem;
+		width: 2.5rem;
+		color: var(--color-secondary);
+	}
+	.faq-heading h2 {
+		font-size: 2.5rem;
+		margin: 0;
+	}
+
+	.faq-faqs {
+		flex: 1.5;
+		border-top: 1px solid var(--color-text-tertiary);
+	}
+
+	.item {
+		border-bottom: 1px solid var(--color-text-tertiary);
+	}
+	summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1.25rem 0;
+		cursor: pointer;
+		list-style: none;
+		font-weight: 600;
+		color: var(--color-text-primary);
+	}
+	summary::-webkit-details-marker {
+		display: none;
+	}
+	.question {
+		flex: 1;
+	}
+	.icon-badge {
+		flex-shrink: 0;
+		width: 1.75rem;
+		height: 1.75rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 0.35rem;
+		background-color: var(--color-secondary);
+		color: var(--color-primary);
+	}
+
+	.icon {
+		width: 2rem;
+		height: 2rem;
+	}
+	.icon-plus {
+		display: block;
+	}
+	.icon-minus {
+		display: none;
+	}
+	details[open] .icon-plus {
+		display: none;
+	}
+	details[open] .icon-minus {
+		display: block;
+	}
+
+	.content {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 300ms ease;
+	}
+	details[open] .content {
+		grid-template-rows: 1fr;
+	}
+	.content-inner {
+		overflow: hidden;
+		min-height: 0;
+	}
+	.answer {
+		margin: 0 0 1.25rem 0;
+		color: var(--color-text-secondary);
+		max-width: 60ch;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.content {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 992px) {
+		.faq-wrapper {
+			flex-direction: row;
+			justify-content: space-between;
+		}
+
+		.faq-heading {
+			align-items: flex-start;
+			justify-content: flex-start;
+		}
+	}
+</style>

@@ -1,0 +1,52 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { NavItem } from '../lib/types';
+
+interface Props {
+	logo: string | null;
+	siteTitle: string;
+	navItems?: NavItem[];
+}
+
+const { logo, siteTitle, navItems } = Astro.props;
+---
+
+<header class='site-header'>
+	<a class='brand' href='/'>
+		{
+			logo ? (
+				<img src={logo} alt={siteTitle} />
+			) : (
+				<Icon class='icon' name='iconoir:tools' />
+			)
+		}
+	</a>
+	<nav>
+		{navItems?.map((item) => <a href={item.path}>{item.label}</a>)}
+	</nav>
+</header>
+
+<style>
+	.site-header {
+		max-width: var(--max-width);
+		margin-inline: auto;
+		padding: var(--space-md);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	nav a {
+		margin-left: 2rem;
+		color: var(--color-secondary);
+		text-decoration: none;
+	}
+	nav a:hover {
+		text-decoration: underline;
+	}
+	a.brand {
+		font-weight: 800;
+		text-decoration: none;
+		font-size: 2rem;
+		color: var(--color-secondary);
+	}
+</style>

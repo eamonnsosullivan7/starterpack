@@ -3,6 +3,17 @@ import {
 	createImageUrlBuilder,
 	type SanityImageSource,
 } from '@sanity/image-url';
+import type {
+	AboutPage,
+	Faq,
+	Homepage,
+	Project,
+	Service,
+	SimplePage,
+	SiteSettings,
+	SocialLink,
+	Testimonial,
+} from './types';
 
 export const client = createClient({
 	projectId: import.meta.env.SANITY_PROJECT_ID,
@@ -20,7 +31,7 @@ export function urlFor(source: SanityImageSource) {
 // --- Site-wide -----------------------------------------------------------
 
 export async function getSiteSettings() {
-	return client.fetch(`*[_type == "siteSettings"][0]{
+	return client.fetch<SiteSettings | null>(`*[_type == "siteSettings"][0]{
     title,
     description,
     logo,
@@ -34,10 +45,31 @@ export async function getSiteSettings() {
   }`);
 }
 
+export function findSocialLink(
+	socialLinks: SocialLink[] | undefined,
+	platform: string,
+): string | undefined {
+	return socialLinks?.find((link) => link.platform?.toLowerCase() === platform.toLowerCase())
+		?.url;
+}
+
+// Falls back to the template's default palette wherever a client hasn't set
+// a brand color in Site Settings yet.
+export function getThemeColors(settings: SiteSettings | null) {
+	return {
+		colorPrimary: settings?.colors?.primary ?? '#111111',
+		colorSecondary: settings?.colors?.secondary ?? '#555555',
+		colorAccent: settings?.colors?.accent ?? '#2563eb',
+		colorTextPrimary: settings?.colors?.textPrimary ?? '#111111',
+		colorTextSecondary: settings?.colors?.textSecondary ?? '#555555',
+		colorTextTertiary: settings?.colors?.textTertiary ?? '#666',
+	} satisfies Record<string, string>;
+}
+
 // --- Homepage (singleton) -------------------------------------------------
 
 export async function getHomepage() {
-	return client.fetch(`*[_type == "homepage"][0]{
+	return client.fetch<Homepage | null>(`*[_type == "homepage"][0]{
     heroHeading,
     heroSubheading,
     heroImage,
@@ -46,14 +78,16 @@ export async function getHomepage() {
     aboutImage,
     "featuredServices": featuredServices[]->{ _id, title, summary, icon, slug },
     "featuredTestimonials": featuredTestimonials[]->{ _id, quote, authorName, authorRole, authorPhoto },
-    "selectedWork": selectedWork[]->{ _id, title, shortDescription, coverImage, slug }
+    "selectedWork": selectedWork[]->{ _id, title, shortDescription, coverImage, slug },
+    faqHeading,
+    "featuredFaqs": featuredFaqs[]->{ _id, question, answer }
   }`);
 }
 
 // --- About page (singleton) -----------------------------------------------
 
 export async function getAboutPage() {
-	return client.fetch(`*[_type == "aboutPage"][0]{
+	return client.fetch<AboutPage | null>(`*[_type == "aboutPage"][0]{
     seoDescription,
     heroHeading,
     heroSubheading,
@@ -65,13 +99,13 @@ export async function getAboutPage() {
 // --- Services --------------------------------------------------------------
 
 export async function getAllServices() {
-	return client.fetch(`*[_type == "service"] | order(orderRank asc) {
+	return client.fetch<Service[]>(`*[_type == "service"] | order(orderRank asc) {
     _id, title, summary, description, icon, slug, price
   }`);
 }
 
 export async function getServiceBySlug(slug: string) {
-	return client.fetch(
+	return client.fetch<Service | null>(
 		`*[_type == "service" && slug.current == $slug][0]{
       title, summary, description, icon, price
     }`,
@@ -82,21 +116,29 @@ export async function getServiceBySlug(slug: string) {
 // --- Testimonials ------------------------------------------------------------
 
 export async function getAllTestimonials() {
-	return client.fetch(`*[_type == "testimonial"] | order(_createdAt desc) {
+	return client.fetch<Testimonial[]>(`*[_type == "testimonial"] | order(_createdAt desc) {
     _id, quote, authorName, authorRole, authorPhoto
+  }`);
+}
+
+// --- FAQs --------------------------------------------------------------------
+
+export async function getAllFaqs() {
+	return client.fetch<Faq[]>(`*[_type == "faq"] | order(_createdAt desc) {
+    _id, question, answer
   }`);
 }
 
 // --- Projects ----------------------------------------------------------------
 
 export async function getAllProjects() {
-	return client.fetch(`*[_type == "project"] | order(orderRank asc) {
+	return client.fetch<Project[]>(`*[_type == "project"] | order(orderRank asc) {
     _id, title, shortDescription, coverImage, slug
   }`);
 }
 
 export async function getProjectBySlug(slug: string) {
-	return client.fetch(
+	return client.fetch<Project | null>(
 		`*[_type == "project" && slug.current == $slug][0]{
       title, description, coverImage, gallery, slug
     }`,
@@ -109,7 +151,7 @@ export async function getProjectBySlug(slug: string) {
 // structured content type of their own.
 
 export async function getSimplePageBySlug(slug: string) {
-	return client.fetch(
+	return client.fetch<SimplePage | null>(
 		`*[_type == "simplePage" && slug.current == $slug][0]{
       title, seoDescription, body
     }`,

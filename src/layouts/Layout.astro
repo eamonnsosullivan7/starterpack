@@ -1,70 +1,36 @@
 ---
-import { getSiteSettings } from '../lib/sanity';
-import { urlFor } from '../lib/sanity';
-import { Icon } from 'astro-icon/components';
-import { iconoirIconName } from '../lib/icon';
+import '../lib/global.css';
+import { findSocialLink, getSiteSettings, getThemeColors } from '../lib/sanity';
+import { imageUrl } from '../lib/image';
 import Footer from '../components/Footer.astro';
+import Head from '../components/Head.astro';
+import Nav from '../components/Nav.astro';
 
 interface Props {
 	title: string;
 	description?: string;
-	children?: any;
 }
 
 const { title, description } = Astro.props;
 const settings = await getSiteSettings();
 const siteTitle = settings?.title ?? 'Site';
-const logoUrl = settings?.logo ? urlFor(settings.logo).height(64).url() : null;
-const faviconUrl = settings?.favicon
-	? urlFor(settings.favicon).width(64).height(64).url()
-	: '/favicon.svg';
-const instagramUrl = settings?.socialLinks?.find(
-	(link: any) => link.platform?.toLowerCase() === 'instagram',
-)?.url;
-
-const colorVars = {
-	colorPrimary: settings?.colors?.primary ?? '#111111',
-	colorSecondary: settings?.colors?.secondary ?? '#555555',
-	colorAccent: settings?.colors?.accent ?? '#2563eb',
-	colorTextPrimary: settings?.colors?.textPrimary ?? '#111111',
-	colorTextSecondary: settings?.colors?.textSecondary ?? '#555555',
-	colorTextTertiary: settings?.colors?.textTertiary ?? '#666',
-};
-
-const iconName = iconoirIconName('tools');
+const logoUrl = imageUrl(settings?.logo, { height: 64 });
+const faviconUrl =
+	imageUrl(settings?.favicon, { width: 64, height: 64 }) ?? '/favicon.svg';
+const instagramUrl = findSocialLink(settings?.socialLinks, 'instagram');
+const colorVars = getThemeColors(settings);
 ---
 
 <!doctype html>
 <html lang='en'>
-	<head>
-		<meta charset='UTF-8' />
-		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
-		<title>{title} · {siteTitle}</title>
-		<meta
-			name='description'
-			content={description ?? settings?.description ?? ''}
-		/>
-		<link rel='icon' href={faviconUrl} />
-	</head>
 	<body>
-		<header class='site-header'>
-			<a class='brand' href='/'>
-				{
-					logoUrl ? (
-						<img src={logoUrl} alt={siteTitle} />
-					) : (
-						<Icon class='icon' name={iconName} />
-					)
-				}
-			</a>
-			<nav>
-				{
-					settings?.navItems?.map((item: any) => (
-						<a href={item.path}>{item.label}</a>
-					))
-				}
-			</nav>
-		</header>
+		<Head
+			title={title}
+			siteTitle={siteTitle}
+			description={description ?? settings?.description ?? ''}
+			favicon={faviconUrl}
+		/>
+		<Nav logo={logoUrl} siteTitle={siteTitle} navItems={settings?.navItems} />
 
 		<main>
 			<slot />
@@ -100,63 +66,9 @@ const iconName = iconoirIconName('tools');
 				color: var(--color-text-secondary);
 			}
 
-			.site-header {
-				max-width: var(--max-width);
-				margin-inline: auto;
-				padding: var(--space-md);
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-			}
 			main {
 				margin-inline: auto;
 				padding-bottom: 80px;
-			}
-
-			nav a {
-				margin-left: 2rem;
-				color: var(--color-secondary);
-				text-decoration: none;
-			}
-			nav a:hover {
-				text-decoration: underline;
-			}
-			a.brand {
-				font-weight: 800;
-				text-decoration: none;
-				font-size: 2rem;
-				color: var(--color-secondary);
-			}
-		</style>
-
-		<style is:global>
-			* {
-				box-sizing: border-box;
-			}
-			.container {
-				max-width: var(--max-width);
-				width: 100%;
-				margin: auto;
-				padding: 0px 16px;
-			}
-
-			h1,
-			h2,
-			h3,
-			h4,
-			h5,
-			h6 {
-				color: var(--color-text-primary);
-			}
-
-			a {
-				color: inherit;
-				text-decoration: underline;
-				text-underline-offset: 3px;
-			}
-
-			p {
-				margin: 0 0 1rem 0;
 			}
 		</style>
 	</body>

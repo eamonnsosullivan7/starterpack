@@ -1,12 +1,13 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { iconoirIconName } from '../lib/icon';
+import type { Slug } from '../lib/types';
 
 interface Props {
 	title: string;
 	summary?: string;
 	icon?: string; // Iconoir icon name, e.g. "code-bracket" — see icon-sets.iconify.design/iconoir
-	slug?: { current: string };
+	slug?: Slug;
 	price?: string;
 }
 const { title, summary, icon, slug, price } = Astro.props;

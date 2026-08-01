@@ -3,9 +3,9 @@ import Layout from '../../layouts/Layout.astro';
 import { getServiceBySlug, getAllServices } from '../../lib/sanity';
 
 export async function getStaticPaths() {
-  const services: any[] = await getAllServices();
+  const services = await getAllServices();
   return services.map((service) => ({
-    params: { slug: service.slug.current },
+    params: { slug: service.slug!.current },
   }));
 }
 

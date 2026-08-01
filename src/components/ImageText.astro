@@ -1,15 +1,16 @@
 ---
-import { urlFor } from '../lib/sanity';
+import { imageUrl } from '../lib/image';
 import { blocksToParagraphs } from '../lib/portableText';
+import type { PortableText, SanityImage } from '../lib/types';
 
 interface Props {
 	heading?: string;
-	text?: any;
-	image?: any;
+	text?: PortableText | string;
+	image?: SanityImage;
 	reverse?: boolean;
 }
 const { heading, text, image, reverse = false } = Astro.props;
-const src = image ? urlFor(image).width(1200).auto('format').url() : null;
+const src = imageUrl(image, { width: 1200 });
 ---
 
 <section class:list={['image-text', { reverse }]}>

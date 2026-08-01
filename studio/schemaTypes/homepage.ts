@@ -32,5 +32,12 @@ export default defineType({
       of: [{ type: 'reference', to: [{ type: 'project' }] }],
       validation: (Rule) => Rule.max(3).warning('Usually looks best with 3 or fewer on the homepage'),
     }),
+    defineField({ name: 'faqHeading', title: 'FAQ heading', type: 'string' }),
+    defineField({
+      name: 'featuredFaqs',
+      title: 'Featured FAQs',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'faq' }] }],
+    }),
   ],
 });

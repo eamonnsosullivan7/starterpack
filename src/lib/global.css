@@ -1,0 +1,32 @@
+:root {
+	--section-block: 4rem;
+}
+
+* {
+	box-sizing: border-box;
+}
+.container {
+	max-width: var(--max-width);
+	width: 100%;
+	margin: auto;
+	padding: 0px 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: var(--color-text-primary);
+}
+
+a {
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+p {
+	margin: 0 0 1rem 0;
+}
