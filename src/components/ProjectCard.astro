@@ -1,5 +1,5 @@
 ---
-import { imageUrl } from '../lib/image';
+import { imageSrcSet, imageUrl } from '../lib/image';
 import type { SanityImage, Slug } from '../lib/types';
 
 interface Props {
@@ -18,14 +18,39 @@ const {
 } = Astro.props;
 const href = slug?.current ? `/projects/${slug.current}` : undefined;
 const src = imageUrl(coverImage, { width: 800, height: 600 });
+const srcset = imageSrcSet(coverImage, [400, 800], 800 / 600);
+
+// Rough approximation of the 1/2/3-column grids this card is used in — not
+// exact, but that keeps it from silently drifting out of sync with layout
+// tweaks later (this card is used in more than one grid with slightly
+// different breakpoints).
+const sizes = '(min-width: 1024px) min(33vw, 380px), (min-width: 640px) min(50vw, 500px), 100vw';
 ---
 
 <article class='project-card'>
 	{
 		href ? (
-			<a href={href}>{src && <img src={src} alt={title} loading='lazy' />}</a>
+			<a href={href}>
+				{src && (
+					<img
+						src={src}
+						srcset={srcset ?? undefined}
+						sizes={sizes}
+						alt={title}
+						loading='lazy'
+					/>
+				)}
+			</a>
 		) : (
-			src && <img src={src} alt={title} loading='lazy' />
+			src && (
+				<img
+					src={src}
+					srcset={srcset ?? undefined}
+					sizes={sizes}
+					alt={title}
+					loading='lazy'
+				/>
+			)
 		)
 	}
 	<h3>{href ? <a href={href}>{title}</a> : title}</h3>

@@ -1,5 +1,5 @@
 ---
-import { imageUrl } from '../lib/image';
+import { imageSrcSet, imageUrl } from '../lib/image';
 import { blocksToParagraphs } from '../lib/portableText';
 import type { PortableText, SanityImage } from '../lib/types';
 
@@ -11,6 +11,12 @@ interface Props {
 }
 const { heading, text, image, reverse = false } = Astro.props;
 const src = imageUrl(image, { width: 1200 });
+const srcset = imageSrcSet(image, [400, 800, 1200]);
+
+// Rough approximation of the two-column desktop layout below, capped so it
+// doesn't keep growing past the container's max-width — not exact, but that
+// keeps it from silently drifting out of sync with layout tweaks later.
+const sizes = '(min-width: 768px) min(50vw, 600px), 100vw';
 ---
 
 <section class:list={['image-text', { reverse }]}>
@@ -21,7 +27,17 @@ const src = imageUrl(image, { width: 1200 });
 		</div>
 	</div>
 
-	{src && <img src={src} alt={heading ?? ''} loading='lazy' />}
+	{
+		src && (
+			<img
+				src={src}
+				srcset={srcset ?? undefined}
+				sizes={sizes}
+				alt={heading ?? ''}
+				loading='lazy'
+			/>
+		)
+	}
 </section>
 <style>
 	.image-text {
