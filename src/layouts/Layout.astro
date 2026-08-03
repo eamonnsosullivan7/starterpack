@@ -28,13 +28,13 @@ const socialUrls = (settings?.socialLinks ?? [])
 
 <!doctype html>
 <html lang='en'>
+	<Head
+		title={title}
+		siteTitle={siteTitle}
+		description={description ?? settings?.description ?? ''}
+		favicon={faviconUrl}
+	/>
 	<body>
-		<Head
-			title={title}
-			siteTitle={siteTitle}
-			description={description ?? settings?.description ?? ''}
-			favicon={faviconUrl}
-		/>
 		<OrganizationSchema
 			name={settings?.companyName ?? siteTitle}
 			url={siteUrl}

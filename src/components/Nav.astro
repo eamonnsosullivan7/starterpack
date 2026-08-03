@@ -12,12 +12,12 @@ const { logo, siteTitle, navItems } = Astro.props;
 ---
 
 <header class='site-header'>
-	<a class='brand' href='/'>
+	<a class='brand' href='/' aria-label={siteTitle}>
 		{
 			logo ? (
-				<img src={logo} alt={siteTitle} />
+				<img src={logo} alt='' />
 			) : (
-				<Icon class='icon' name='iconoir:tools' />
+				<Icon class='icon' name='iconoir:tools' aria-hidden='true' />
 			)
 		}
 	</a>
