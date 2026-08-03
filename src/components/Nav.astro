@@ -69,7 +69,7 @@ const { logo, siteTitle, navItems } = Astro.props;
 			sync();
 		};
 
-		mobileQuery.addEventListener('change', sync);
+		mobileQuery.addEventListener('change', () => setOpen(false));
 		sync();
 
 		toggle.addEventListener('click', () => {
