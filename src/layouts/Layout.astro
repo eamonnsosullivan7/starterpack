@@ -5,6 +5,7 @@ import { imageUrl } from '../lib/image';
 import Footer from '../components/Footer.astro';
 import Head from '../components/Head.astro';
 import Nav from '../components/Nav.astro';
+import OrganizationSchema from '../components/OrganizationSchema.astro';
 
 interface Props {
 	title: string;
@@ -19,6 +20,10 @@ const faviconUrl =
 	imageUrl(settings?.favicon, { width: 64, height: 64 }) ?? '/favicon.svg';
 const instagramUrl = findSocialLink(settings?.socialLinks, 'instagram');
 const colorVars = getThemeColors(settings);
+const siteUrl = Astro.site?.href ?? Astro.url.origin;
+const socialUrls = (settings?.socialLinks ?? [])
+	.map((link) => link.url)
+	.filter((url): url is string => !!url);
 ---
 
 <!doctype html>
@@ -29,6 +34,14 @@ const colorVars = getThemeColors(settings);
 			siteTitle={siteTitle}
 			description={description ?? settings?.description ?? ''}
 			favicon={faviconUrl}
+		/>
+		<OrganizationSchema
+			name={settings?.companyName ?? siteTitle}
+			url={siteUrl}
+			logo={logoUrl ?? undefined}
+			telephone={settings?.phone}
+			address={settings?.companyAddress}
+			sameAs={socialUrls}
 		/>
 		<Nav logo={logoUrl} siteTitle={siteTitle} navItems={settings?.navItems} />
 
@@ -55,8 +68,8 @@ const colorVars = getThemeColors(settings);
 				--color-secondary: var(--colorSecondary);
 				--color-accent: var(--colorAccent);
 				--color-text-primary: #1a1a1a;
-				--color-text-secondary: #57534d;
-				--color-text-tertiary: #847e77;
+				--color-text-secondary: #262626;
+				--color-text-tertiary: #444545;
 			}
 			body {
 				margin: 0;

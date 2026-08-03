@@ -1,3 +1,7 @@
+import {
+	getImageDimensions,
+	type SanityImageSource as AssetUtilsImageSource,
+} from '@sanity/asset-utils';
 import { urlFor } from './sanity';
 import type { SanityImage } from './types';
 
@@ -6,8 +10,6 @@ interface ImageUrlOptions {
 	height?: number;
 }
 
-// Wraps the "turn a Sanity image field into a URL, or null if there isn't
-// one" pattern that used to be repeated at every call site.
 export function imageUrl(
 	image: SanityImage | null | undefined,
 	{ width, height }: ImageUrlOptions = {},
@@ -17,4 +19,14 @@ export function imageUrl(
 	if (width) builder = builder.width(width);
 	if (height) builder = builder.height(height);
 	return builder.auto('format').url();
+}
+
+// Render-time `width`/`height` attributes for an <img>
+export function imageDimensions(
+	image: SanityImage | null | undefined,
+	targetWidth: number,
+): { width: number; height: number } | null {
+	if (!image) return null;
+	const { aspectRatio } = getImageDimensions(image as AssetUtilsImageSource);
+	return { width: targetWidth, height: Math.round(targetWidth / aspectRatio) };
 }

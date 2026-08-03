@@ -17,7 +17,7 @@ const telHref = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : undefined;
 	<div class='container'>
 		<div class='footer-wrapper'>
 			<a class='brand' href='/'>
-				{logoUrl ? <img src={logoUrl} alt={companyName} /> : companyName}
+				{logoUrl ? <img src={logoUrl} alt={companyName} loading='lazy' /> : companyName}
 			</a>
 			<div class='footer-details'>
 				{companyName && <p class='company-name'>{companyName}</p>}

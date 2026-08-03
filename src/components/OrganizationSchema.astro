@@ -1,0 +1,27 @@
+---
+interface Props {
+	name: string;
+	url: string;
+	logo?: string;
+	telephone?: string;
+	address?: string;
+	sameAs?: string[];
+}
+const { name, url, logo, telephone, address, sameAs } = Astro.props;
+
+// LocalBusiness is a more specific schema.org type than Organization, and
+// preferred by search/AI systems when there's a physical address to anchor
+// it to — falls back to the generic type for clients without one.
+const schema = {
+	'@context': 'https://schema.org',
+	'@type': address ? 'LocalBusiness' : 'Organization',
+	name,
+	url,
+	logo,
+	telephone,
+	address,
+	sameAs: sameAs && sameAs.length > 0 ? sameAs : undefined,
+};
+---
+
+<script type='application/ld+json' set:html={JSON.stringify(schema)} />

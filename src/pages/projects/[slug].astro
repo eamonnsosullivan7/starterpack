@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getProjectBySlug, getAllProjects } from '../../lib/sanity';
-import { imageUrl } from '../../lib/image';
+import { imageDimensions, imageUrl } from '../../lib/image';
 import { blocksToParagraphs } from '../../lib/portableText';
 import { Icon } from 'astro-icon/components';
 
@@ -15,11 +15,24 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const project = await getProjectBySlug(slug!);
 const coverSrc = imageUrl(project?.coverImage, { width: 1600 });
+const coverDimensions = imageDimensions(project?.coverImage, 1600);
 
-const projectGallery = project?.gallery ?? [];
+const projectGallery = (project?.gallery ?? []).map((image) => ({
+	src: imageUrl(image, { width: 1000 }),
+	dimensions: imageDimensions(image, 1000),
+}));
+
+const projectSchema = project && {
+	'@context': 'https://schema.org',
+	'@type': 'CreativeWork',
+	name: project.title,
+	description: project.shortDescription,
+	image: coverSrc ?? undefined,
+};
 ---
 
 <Layout title={project?.title ?? slug}>
+	{projectSchema && <script type='application/ld+json' set:html={JSON.stringify(projectSchema)} />}
 	<div class='container'>
 		<a href='/projects' class='back-button'>
 			<Icon class='icon' name={`iconoir:arrow-left`} /> Back to Projects
@@ -36,14 +49,35 @@ const projectGallery = project?.gallery ?? [];
 				</div>
 			</div>
 
-			{coverSrc && <img class='cover' src={coverSrc} alt='' />}
+			{
+				coverSrc && coverDimensions && (
+					<img
+						class='cover'
+						src={coverSrc}
+						width={coverDimensions.width}
+						height={coverDimensions.height}
+						alt={project?.title ?? ''}
+						fetchpriority='high'
+					/>
+				)
+			}
 
 			{
 				projectGallery.length > 0 && (
 					<div class='gallery'>
-						{projectGallery.map((image) => (
-							<img src={imageUrl(image, { width: 1000 })} alt='' />
-						))}
+						{projectGallery.map(
+							(image, index) =>
+								image.src &&
+								image.dimensions && (
+									<img
+										src={image.src}
+										width={image.dimensions.width}
+										height={image.dimensions.height}
+										alt={`${project?.title ?? ''} — photo ${index + 1}`}
+										loading='lazy'
+									/>
+								),
+						)}
 					</div>
 				)
 			}
@@ -62,10 +96,6 @@ const projectGallery = project?.gallery ?? [];
 			'gallery';
 	}
 
-	/* Mobile: .info "disappears" from the box tree — title and description
-	   become direct grid items of .project-layout, so they can be placed
-	   independently (with the cover image in between them) via the areas
-	   above, instead of staying grouped together as one block. */
 	.info {
 		display: contents;
 	}

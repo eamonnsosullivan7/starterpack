@@ -26,7 +26,9 @@
 	"homepage": "https://github.com/eamonnsosullivan7/starterpack#readme",
 	"dependencies": {
 		"@astrojs/cloudflare": "^14.1.4",
+		"@astrojs/sitemap": "^3.7.3",
 		"@fontsource-variable/epilogue": "^5.3.0",
+		"@sanity/asset-utils": "^2.3.0",
 		"@sanity/astro": "^3.4.2",
 		"@sanity/client": "^7.23.2",
 		"@sanity/image-url": "^2.1.1",

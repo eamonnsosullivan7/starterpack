@@ -19,7 +19,7 @@ const src = imageUrl(authorPhoto, { width: 120, height: 120 });
 		{quote}&rdquo;
 	</blockquote>
 	<figcaption>
-		{src && <img src={src} alt='' />}
+		{src && <img src={src} alt={authorName} loading='lazy' />}
 		<span>
 			<strong>{authorName}</strong>
 			{authorRole && <span class='role'>{authorRole}</span>}

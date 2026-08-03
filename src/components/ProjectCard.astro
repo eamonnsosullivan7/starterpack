@@ -23,9 +23,9 @@ const src = imageUrl(coverImage, { width: 800, height: 600 });
 <article class='project-card'>
 	{
 		href ? (
-			<a href={href}>{src && <img src={src} alt='' />}</a>
+			<a href={href}>{src && <img src={src} alt={title} loading='lazy' />}</a>
 		) : (
-			src && <img src={src} alt='' />
+			src && <img src={src} alt={title} loading='lazy' />
 		)
 	}
 	<h3>{href ? <a href={href}>{title}</a> : title}</h3>

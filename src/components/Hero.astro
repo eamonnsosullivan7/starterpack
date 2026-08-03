@@ -1,5 +1,5 @@
 ---
-import { imageUrl } from '../lib/image';
+import { imageDimensions, imageUrl } from '../lib/image';
 import type { SanityImage } from '../lib/types';
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
 }
 const { heading, subheading, image } = Astro.props;
 const src = imageUrl(image, { width: 1600 });
+const dimensions = imageDimensions(image, 1600);
 ---
 
 <section class='hero'>
@@ -19,7 +20,17 @@ const src = imageUrl(image, { width: 1600 });
 				{subheading && <p>{subheading}</p>}
 			</div>
 		</div>
-		{src && <img src={src} alt='' />}
+		{
+			src && dimensions && (
+				<img
+					src={src}
+					width={dimensions.width}
+					height={dimensions.height}
+					alt={heading}
+					fetchpriority='high'
+				/>
+			)
+		}
 	</div>
 </section>
 

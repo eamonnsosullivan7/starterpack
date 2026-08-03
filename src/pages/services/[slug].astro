@@ -11,9 +11,17 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 const service = await getServiceBySlug(slug!);
+
+const serviceSchema = service && {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.title,
+  description: service.description ?? service.summary,
+};
 ---
 
 <Layout title={service?.title ?? slug}>
+  {serviceSchema && <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />}
   <h1>{service?.title}</h1>
   {service?.price && <p class="price">{service.price}</p>}
   <div class="description">
