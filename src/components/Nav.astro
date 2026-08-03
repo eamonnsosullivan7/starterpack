@@ -21,32 +21,184 @@ const { logo, siteTitle, navItems } = Astro.props;
 			)
 		}
 	</a>
-	<nav>
-		{navItems?.map((item) => <a href={item.path}>{item.label}</a>)}
-	</nav>
+	{
+		navItems && navItems.length > 0 && (
+			<>
+				<button
+					type='button'
+					class='menu-toggle'
+					aria-expanded='false'
+					aria-controls='site-nav'
+					aria-label='Menu'
+				>
+					<Icon class='icon icon-menu' name='iconoir:menu' aria-hidden='true' />
+					<Icon
+						class='icon icon-close'
+						name='iconoir:xmark'
+						aria-hidden='true'
+					/>
+				</button>
+				<nav id='site-nav'>
+					{navItems.map((item) => (
+						<a href={item.path}>{item.label}</a>
+					))}
+				</nav>
+			</>
+		)
+	}
 </header>
+
+<script>
+	document.querySelectorAll<HTMLElement>('.site-header').forEach((header) => {
+		const toggle = header.querySelector<HTMLButtonElement>('.menu-toggle');
+		const nav = header.querySelector<HTMLElement>('nav');
+		if (!toggle || !nav) return;
+
+		const mobileQuery = window.matchMedia('(max-width: 767px)');
+
+		const sync = () => {
+			const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+			const lock = isOpen && mobileQuery.matches;
+			nav.inert = mobileQuery.matches && !isOpen;
+			document.documentElement.style.overflow = lock ? 'hidden' : '';
+			document.body.style.overflow = lock ? 'hidden' : '';
+		};
+
+		const setOpen = (open: boolean) => {
+			toggle.setAttribute('aria-expanded', String(open));
+			sync();
+		};
+
+		mobileQuery.addEventListener('change', sync);
+		sync();
+
+		toggle.addEventListener('click', () => {
+			setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+		});
+
+		nav.querySelectorAll('a').forEach((link) => {
+			link.addEventListener('click', () => setOpen(false));
+		});
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') setOpen(false);
+		});
+
+		document.addEventListener('click', (e) => {
+			if (!header.contains(e.target as Node)) setOpen(false);
+		});
+	});
+</script>
 
 <style>
 	.site-header {
+		--header-height: 96px;
 		max-width: var(--max-width);
 		margin-inline: auto;
 		padding: var(--space-md);
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		position: relative;
+		height: var(--header-height);
+	}
+	a {
+		font-weight: 800;
+		text-decoration: none;
+		font-size: 2rem;
+		color: var(--color-secondary);
+		z-index: 11;
+	}
+	.site-header:has(> .menu-toggle[aria-expanded='true']) a {
+		color: var(--color-primary);
+	}
+
+	.menu-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		border: none;
+		background: none;
+		color: var(--color-secondary);
+		cursor: pointer;
+		padding: 0;
+		z-index: 11;
+	}
+
+	.menu-toggle[aria-expanded='true'] {
+		color: var(--color-primary);
+	}
+	.icon {
+		height: 1.5rem;
+		width: 1.5rem;
+	}
+	.icon-close {
+		display: none;
+	}
+	.menu-toggle[aria-expanded='true'] .icon-menu {
+		display: none;
+	}
+	.menu-toggle[aria-expanded='true'] .icon-close {
+		display: block;
+	}
+
+	nav {
+		position: fixed;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		background-color: var(--color-secondary);
+		padding: var(--header-height) var(--space-md) var(--space-md)
+			var(--space-md);
+		gap: 2rem;
+		z-index: 10;
+		opacity: 0;
+		pointer-events: none;
+		will-change: opacity;
+		transition: opacity 250ms ease-out;
+	}
+	.menu-toggle[aria-expanded='true'] + nav {
+		opacity: 1;
+		pointer-events: auto;
+		transition: opacity 250ms ease-in;
 	}
 	nav a {
-		margin-left: 2rem;
-		color: var(--color-secondary);
+		color: var(--color-primary);
 		text-decoration: none;
 	}
 	nav a:hover {
 		text-decoration: underline;
 	}
-	a.brand {
-		font-weight: 800;
-		text-decoration: none;
-		font-size: 2rem;
-		color: var(--color-secondary);
+
+	@media (prefers-reduced-motion: reduce) {
+		nav {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.menu-toggle {
+			display: none;
+		}
+		nav {
+			display: flex;
+			position: static;
+			flex-direction: row;
+			background: none;
+			padding: 0;
+			border: none;
+			gap: 0;
+			opacity: 1;
+			pointer-events: auto;
+		}
+		nav a {
+			margin-left: 2rem;
+			color: var(--color-secondary);
+			font-size: 1rem;
+		}
 	}
 </style>
